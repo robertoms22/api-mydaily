@@ -4,31 +4,23 @@ const cors = require('cors');
 require('dotenv').config();
 
 const app = express();
-const port = process.env.PORT || 5000;
 
-// Configuración de CORS para permitir cualquier origen temporalmente
+// Configuración de CORS
 const corsOptions = {
   origin: process.env.NODE_ENV === 'production'
-    ? ['https://react-beta-weld.vercel.app'] // Reemplaza con la URL de tu frontend en Vercel
+    ? ['https://react-beta-weld.vercel.app']
     : '*',
   methods: 'GET,POST,PUT,DELETE,OPTIONS',
   allowedHeaders: 'Content-Type,Authorization',
 };
 
 app.use(cors(corsOptions));
-
-
-
-
 app.use(express.json());
 
-mongoose.connect(process.env.MONGODB_URI)
+// Conexión a MongoDB
+mongoose.connect(process.env.MONGODB_URI, { useNewUrlParser: true, useUnifiedTopology: true })
   .then(() => console.log('Conectado a MongoDB'))
   .catch((err) => console.error('Error al conectar a MongoDB:', err));
-
-// Rutas y modelos (sin cambios en el código)
-
-
 
 /**
  * Modelos de Mongoose
@@ -40,38 +32,34 @@ const userSchema = new mongoose.Schema({
   password: { type: String, required: true },
 });
 
-// Modelo de usuario
 const User = mongoose.model('User', userSchema, 'usuarios');
 
-// Modelo de Daily
+// Esquema y modelo de Daily
 const dailySchema = new mongoose.Schema({
   title: { type: String, required: true },
   description: { type: String, required: true },
   date: { type: Date, default: Date.now },
 });
-
 const Daily = mongoose.model('Daily', dailySchema);
 
-// Modelo de Horas Extras
+// Esquema y modelo de Horas Extras
 const horasExtrasSchema = new mongoose.Schema({
   title: { type: String, required: true },
   date: { type: Date, required: true },
   hours: { type: Number, required: true },
 });
-
 const HorasExtras = mongoose.model('HorasExtras', horasExtrasSchema);
 
-// Modelo de Notas
+// Esquema y modelo de Notas
 const notasSchema = new mongoose.Schema({
   title: { type: String, required: true },
   description: { type: String, required: true },
   date: { type: Date, required: true },
 });
-
 const Notas = mongoose.model('Notas', notasSchema);
 
 /**
- * Rutas de Login
+ * Rutas
  */
 
 // Ruta de login
@@ -80,7 +68,6 @@ app.post('/login', async (req, res) => {
 
   try {
     const user = await User.findOne({ email });
-
     if (!user) {
       return res.status(400).json({ message: 'Usuario no encontrado' });
     }
@@ -96,11 +83,7 @@ app.post('/login', async (req, res) => {
   }
 });
 
-/**
- * Rutas para Daily
- */
-
-// Crear una nota diaria
+// Rutas para Daily
 app.post('/daily', async (req, res) => {
   try {
     const newDaily = new Daily(req.body);
@@ -111,7 +94,6 @@ app.post('/daily', async (req, res) => {
   }
 });
 
-// Leer todas las notas diarias
 app.get('/daily', async (req, res) => {
   try {
     const dailies = await Daily.find();
@@ -121,7 +103,6 @@ app.get('/daily', async (req, res) => {
   }
 });
 
-// Actualizar una nota diaria
 app.put('/daily/:id', async (req, res) => {
   try {
     const updatedDaily = await Daily.findByIdAndUpdate(req.params.id, req.body, { new: true });
@@ -131,7 +112,6 @@ app.put('/daily/:id', async (req, res) => {
   }
 });
 
-// Eliminar una nota diaria
 app.delete('/daily/:id', async (req, res) => {
   try {
     await Daily.findByIdAndDelete(req.params.id);
@@ -141,11 +121,7 @@ app.delete('/daily/:id', async (req, res) => {
   }
 });
 
-/**
- * Rutas para Horas Extras
- */
-
-// Crear horas extras
+// Rutas para Horas Extras
 app.post('/horasextras', async (req, res) => {
   try {
     const newHorasExtras = new HorasExtras(req.body);
@@ -156,7 +132,6 @@ app.post('/horasextras', async (req, res) => {
   }
 });
 
-// Leer todas las horas extras
 app.get('/horasextras', async (req, res) => {
   try {
     const horasExtras = await HorasExtras.find();
@@ -166,7 +141,6 @@ app.get('/horasextras', async (req, res) => {
   }
 });
 
-// Actualizar horas extras
 app.put('/horasextras/:id', async (req, res) => {
   try {
     const updatedHorasExtras = await HorasExtras.findByIdAndUpdate(req.params.id, req.body, { new: true });
@@ -176,7 +150,6 @@ app.put('/horasextras/:id', async (req, res) => {
   }
 });
 
-// Eliminar horas extras
 app.delete('/horasextras/:id', async (req, res) => {
   try {
     await HorasExtras.findByIdAndDelete(req.params.id);
@@ -186,11 +159,7 @@ app.delete('/horasextras/:id', async (req, res) => {
   }
 });
 
-/**
- * Rutas para Notas
- */
-
-// Crear una nota
+// Rutas para Notas
 app.post('/notas', async (req, res) => {
   try {
     const newNota = new Notas(req.body);
@@ -201,7 +170,6 @@ app.post('/notas', async (req, res) => {
   }
 });
 
-// Leer todas las notas
 app.get('/notas', async (req, res) => {
   try {
     const notas = await Notas.find();
@@ -211,7 +179,6 @@ app.get('/notas', async (req, res) => {
   }
 });
 
-// Actualizar una nota
 app.put('/notas/:id', async (req, res) => {
   try {
     const updatedNota = await Notas.findByIdAndUpdate(req.params.id, req.body, { new: true });
@@ -221,7 +188,6 @@ app.put('/notas/:id', async (req, res) => {
   }
 });
 
-// Eliminar una nota
 app.delete('/notas/:id', async (req, res) => {
   try {
     await Notas.findByIdAndDelete(req.params.id);
@@ -231,7 +197,5 @@ app.delete('/notas/:id', async (req, res) => {
   }
 });
 
-// Iniciar el servidor
-app.listen(port, () => {
-  console.log(`API iniciada en el puerto ${port}`);
-});
+// Exportar la app para que funcione en Vercel
+module.exports = app;
