@@ -8,11 +8,12 @@ const app = express();
 // Configuración de CORS
 const corsOptions = {
   origin: process.env.NODE_ENV === 'production'
-    ? ['https://react-beta-weld.vercel.app']
-    : '*',
+    ? 'https://front-mydaily.vercel.app' // URL de tu frontend en producción
+    : '*', // Permite cualquier origen en desarrollo
   methods: 'GET,POST,PUT,DELETE,OPTIONS',
   allowedHeaders: 'Content-Type,Authorization',
 };
+
 
 app.use(cors(corsOptions));
 app.use(express.json());
