@@ -1,0 +1,48 @@
+# Logs y reportes de errores
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+
+# Archivos de sistema y temporales
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+*.swp
+
+# Módulos y dependencias de Node.js
+node_modules/
+
+# Archivos de caché y construcciones temporales
+.cache
+dist/
+coverage/
+lib-cov
+build/
+.nyc_output
+*.tgz
+
+# Archivos de entorno y configuración local
+.env
+.env.local
+.env.development
+.env.test
+.env.production
+
+# Archivos específicos de herramientas de desarrollo
+.eslintcache
+.stylelintcache
+.parcel-cache
+.vercel/
+.vscode-test/
+.rpt2_cache/
+.rts2_cache_cjs/
+.rts2_cache_es/
+.rts2_cache_umd/
+
+# Archivos de configuración de Yarn y pnpm
+.yarn-integrity
+.pnp.*
